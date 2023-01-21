@@ -1,10 +1,90 @@
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "@next/font/google";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import type { TDocumentDefinitions, Content } from "pdfmake/interfaces";
+import { Main } from "../styles/";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const [name, setName] = useState<string>("João Tupinambá");
+  const [age, setAge] = useState<string>("18");
+  const [weight, setWeight] = useState<number>(60);
+  const [height, setHeight] = useState<number>(150);
+  const [date, setDate] = useState<string>("22-02-2021");
+  const [whatsapp, setWhatsapp] = useState<string>("98991739443");
+  const [email, setEmail] = useState<string>("joa1brrb@gmail.com");
+  const [gender, setGender] = useState<string>("Masculino");
+  const [waist, setWaist] = useState<string>("38");
+
+  const [imc, setImc] = useState<number>(calculateImc());
+  const [imcClass, setImcClass] = useState("Sobrepeso");
+
+  const [bodyFat, setBodyFat] = useState<string>("20,5");
+  const [bodyFatClass, setBodyFatClass] = useState("Sobrepeso");
+
+  const [muscle, setMuscle] = useState<string>("49,5");
+  const [muscleClass, setMuscleClass] = useState("Sobrepeso");
+
+  function calculateImc(): number {
+    return Number((weight / (((height / 100) * height) / 100)).toFixed(2));
+  }
+
+  function searchBodyFat() {
+    // bodyFatJson[gender][age][bodyFat]; // baixo / normal / alto /  muito alto
+  }
+
+  const header = [{ text: "AVALIÇÃO ELETRÔNICA DE BEM ESTAR" }];
+  let content: Content = [
+    {
+      table: {
+        widths: ["*", 100],
+        body: [[`Nome: ${name}`, `Data: ${date}`]],
+      },
+    },
+    {
+      table: {
+        widths: ["*", "*", "*", "*", "*"],
+        body: [
+          [
+            `Idade: ${age} anos`,
+            `Peso: ${weight} kg`,
+            `Altura: ${height} cm`,
+            `Gênero: ${gender}`,
+            `Cintura: ${waist} cm`,
+          ],
+        ],
+      },
+    },
+    {
+      table: {
+        widths: ["*", "*"],
+        body: [[`Whatsapp: ${whatsapp}`, `Email: ${email}`]],
+      },
+    },
+  ];
+
+  const createPdf = () => {
+    pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+    // const footer = [{ text: "Footer" }];
+
+    const docConfig: TDocumentDefinitions = {
+      pageSize: "A4",
+      pageOrientation: "portrait",
+      //[left, top, right, bottom]
+      pageMargins: [0, 15, 0, 0],
+      header,
+      content,
+      // footer,
+    };
+
+    pdfMake.createPdf(docConfig).open();
+  };
+
   return (
     <>
       <Head>
@@ -13,6 +93,39 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Main>
+        <input value={name} onChange={(e: any) => setName(e.target.value)} />
+        <input value={date} onChange={(e: any) => setDate(e.target.value)} />
+        <input value={age} onChange={(e: any) => setAge(e.target.value)} />
+        <input
+          value={gender}
+          onChange={(e: any) => setGender(e.target.value)}
+        />
+        <input
+          value={height}
+          onChange={(e: any) => setHeight(e.target.value)}
+        />
+        <input
+          value={weight}
+          onChange={(e: any) => setWeight(e.target.value)}
+        />
+        <input value={waist} onChange={(e: any) => setWaist(e.target.value)} />
+        <input
+          value={whatsapp}
+          onChange={(e: any) => setWhatsapp(e.target.value)}
+        />
+        <input value={email} onChange={(e: any) => setEmail(e.target.value)} />
+        <input value={imc} onChange={(e: any) => setImc(e.target.value)} />
+        <input
+          value={bodyFat}
+          onChange={(e: any) => setBodyFat(e.target.value)}
+        />
+        <input
+          value={muscle}
+          onChange={(e: any) => setMuscle(e.target.value)}
+        />
+        <button onClick={createPdf}>Gerar pdf</button>
+      </Main>
     </>
   );
 }
