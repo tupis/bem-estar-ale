@@ -7,12 +7,7 @@ export const Main = styled.main`
   justify-content: center;
   height: 100vh;
   width: 100vw;
-  background-color: #1e1e1e;
-
-  button {
-    color: white;
-    cursor: pointer;
-    padding: 300px;
-    background-color: black;
+  > div {
+    margin: 5px 0;
   }
 `;
