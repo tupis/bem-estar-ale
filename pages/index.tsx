@@ -6,6 +6,7 @@ import { Main } from "../styles/";
 import { useEffect, useState } from "react";
 import * as bodyFatImport from "../data/body-fat.json";
 import * as muscleImport from "../data/muscle.json";
+import * as imcImport from "../data/imc.json";
 import { TextField } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
@@ -20,10 +21,13 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import ImagesBase64 from "../public/images/images-base64.json";
 
 const bodyFatJson = bodyFatImport as { [key: string]: any };
 
 const muscleJson = muscleImport as { [key: string]: any };
+
+const imcJson = imcImport as { [key: string]: any };
 
 export default function Home() {
   const [name, setName] = useState<string>("");
@@ -38,6 +42,7 @@ export default function Home() {
 
   const [imc, setImc] = useState<number | "">("");
   const [imcClass, setImcClass] = useState<string>("");
+  const [filterNormalImc, setFilterNormalImc] = useState<any[]>([]);
 
   const [bodyFat, setBodyFat] = useState<number | "">("");
   const [bodyFatClass, setBodyFatClass] = useState<string>("");
@@ -83,20 +88,55 @@ export default function Home() {
         },
       },
       {
-        text: `seu percentual de gordura é ${bodyFat}, considerado ${bodyFatClass}`,
+        text: `Seu IMC é ${imc}, considerado ${imcClass}`,
+        marginTop: 20,
+        marginLeft: 130,
+      },
+      {
+        text: `O normal para sua altura e peso é entre ${
+          filterNormalImc[0][0]
+        } e ${filterNormalImc[filterNormalImc.length - 1][0]}`,
+        marginLeft: 130,
+      },
+      {
+        image: ImagesBase64.tableIMC,
+        fit: [350, 350],
+        marginLeft: 130,
+      },
+      {
+        text: `Seu percentual de gordura é ${bodyFat}, considerado ${bodyFatClass}`,
+        marginTop: 20,
+        marginLeft: 130,
       },
       {
         text: `O normal para seu sexo e idade é entre ${
           filterNormalBodyFat[0][0]
         } e ${filterNormalBodyFat[filterNormalBodyFat.length - 1][0]}`,
+        marginLeft: 130,
       },
       {
-        text: `seu percentual de massa magra é ${muscle}, considerado ${muscleClass}`,
+        image:
+          gender === "male"
+            ? ImagesBase64.tableBodyFatMale
+            : ImagesBase64.tableBodyFatFemale,
+        fit: [350, 350],
+        marginLeft: 130,
+      },
+      {
+        text: `Seu percentual de massa magra é ${muscle}, considerado ${muscleClass}`,
+        marginLeft: 130,
+        marginTop: 10,
       },
       {
         text: `O normal para seu sexo e idade é entre ${
           filterNormalMuscle[0][0]
         } e ${filterNormalMuscle[filterNormalMuscle.length - 1][0]}`,
+        marginLeft: 130,
+      },
+      {
+        image: ImagesBase64.tableMuscle,
+        fit: [350, 350],
+        marginLeft: 130,
       },
     ];
 
@@ -133,6 +173,14 @@ export default function Home() {
       setFilterNormalMuscle(filterNormalMuscle);
     }
   }, [muscle, gender, age]);
+
+  useEffect(() => {
+    setImcClass(imcJson[Number(imc).toFixed(1)]);
+    const normalFilterImc = Object.entries(imcJson).filter(
+      (item) => item[1] === "peso ideal"
+    );
+    setFilterNormalImc(normalFilterImc);
+  }, [imc]);
 
   return (
     <>
