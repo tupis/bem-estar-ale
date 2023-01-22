@@ -5,72 +5,80 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import type { TDocumentDefinitions, Content } from "pdfmake/interfaces";
 import { Main } from "../styles/";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import * as bodyFatImport from "../data/body-fat.json";
+import * as muscleImport from "../data/muscle.json";
 
-const inter = Inter({ subsets: ["latin"] });
+const bodyFatJson = bodyFatImport as { [key: string]: any };
+const muscleJson = muscleImport as { [key: string]: any };
 
 export default function Home() {
-  const [name, setName] = useState<string>("João Tupinambá");
-  const [age, setAge] = useState<string>("18");
-  const [weight, setWeight] = useState<number>(60);
-  const [height, setHeight] = useState<number>(150);
-  const [date, setDate] = useState<string>("22-02-2021");
-  const [whatsapp, setWhatsapp] = useState<string>("98991739443");
-  const [email, setEmail] = useState<string>("joa1brrb@gmail.com");
-  const [gender, setGender] = useState<string>("Masculino");
-  const [waist, setWaist] = useState<string>("38");
+  const [name, setName] = useState<string>();
+  const [age, setAge] = useState<string>();
+  const [weight, setWeight] = useState<number>();
+  const [height, setHeight] = useState<number>();
+  const [date, setDate] = useState<string>();
+  const [whatsapp, setWhatsapp] = useState<string>();
+  const [email, setEmail] = useState<string>();
+  const [gender, setGender] = useState<string>();
+  const [waist, setWaist] = useState<string>();
 
-  const [imc, setImc] = useState<number>(calculateImc());
-  const [imcClass, setImcClass] = useState("Sobrepeso");
+  const [imc, setImc] = useState<number>();
+  const [imcClass, setImcClass] = useState<string>();
 
-  const [bodyFat, setBodyFat] = useState<string>("20,5");
-  const [bodyFatClass, setBodyFatClass] = useState("Sobrepeso");
+  const [bodyFat, setBodyFat] = useState<string>();
+  const [bodyFatClass, setBodyFatClass] = useState<string>();
 
-  const [muscle, setMuscle] = useState<string>("49,5");
-  const [muscleClass, setMuscleClass] = useState("Sobrepeso");
-
-  function calculateImc(): number {
-    return Number((weight / (((height / 100) * height) / 100)).toFixed(2));
-  }
+  const [muscle, setMuscle] = useState<string>();
+  const [muscleClass, setMuscleClass] = useState<string>();
 
   function searchBodyFat() {
-    // bodyFatJson[gender][age][bodyFat]; // baixo / normal / alto /  muito alto
+    setBodyFatClass(bodyFatJson[gender!][age!][bodyFat!]);
   }
 
-  const header = [{ text: "AVALIÇÃO ELETRÔNICA DE BEM ESTAR" }];
-  let content: Content = [
-    {
-      table: {
-        widths: ["*", 100],
-        body: [[`Nome: ${name}`, `Data: ${date}`]],
-      },
-    },
-    {
-      table: {
-        widths: ["*", "*", "*", "*", "*"],
-        body: [
-          [
-            `Idade: ${age} anos`,
-            `Peso: ${weight} kg`,
-            `Altura: ${height} cm`,
-            `Gênero: ${gender}`,
-            `Cintura: ${waist} cm`,
-          ],
-        ],
-      },
-    },
-    {
-      table: {
-        widths: ["*", "*"],
-        body: [[`Whatsapp: ${whatsapp}`, `Email: ${email}`]],
-      },
-    },
-  ];
+  function searchMuscle() {
+    return muscleJson[gender!][age!][muscle!];
+  }
 
   const createPdf = () => {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
     // const footer = [{ text: "Footer" }];
+
+    const header = [{ text: "AVALIÇÃO ELETRÔNICA DE BEM ESTAR" }];
+    let content: Content = [
+      {
+        table: {
+          widths: ["*", 100],
+          body: [[`Nome: ${name}`, `Data: ${date}`]],
+        },
+      },
+      {
+        table: {
+          widths: ["*", "*", "*", "*", "*"],
+          body: [
+            [
+              `Idade: ${age} anos`,
+              `Peso: ${weight} kg`,
+              `Altura: ${height} cm`,
+              `Gênero: ${gender}`,
+              `Cintura: ${waist} cm`,
+            ],
+          ],
+        },
+      },
+      {
+        table: {
+          widths: ["*", "*"],
+          body: [[`Whatsapp: ${whatsapp}`, `Email: ${email}`]],
+        },
+      },
+      {
+        text: `seu percentual de gordura é ${
+          bodyFatJson[gender!][age!][bodyFat!]
+        }`,
+      },
+    ];
 
     const docConfig: TDocumentDefinitions = {
       pageSize: "A4",
@@ -85,6 +93,12 @@ export default function Home() {
     pdfMake.createPdf(docConfig).open();
   };
 
+  useEffect(() => {
+    if (gender && age && bodyFat) {
+      searchBodyFat();
+    }
+  }, [bodyFat]);
+
   return (
     <>
       <Head>
@@ -94,35 +108,65 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Main>
-        <input value={name} onChange={(e: any) => setName(e.target.value)} />
-        <input value={date} onChange={(e: any) => setDate(e.target.value)} />
-        <input value={age} onChange={(e: any) => setAge(e.target.value)} />
+        <input
+          value={name}
+          onChange={(e: any) => setName(e.target.value)}
+          placeholder="Nome"
+        />
+        <input
+          value={date}
+          onChange={(e: any) => setDate(e.target.value)}
+          placeholder="Data"
+        />
+        <input
+          value={age}
+          onChange={(e: any) => setAge(e.target.value)}
+          placeholder="Idade"
+        />
         <input
           value={gender}
-          onChange={(e: any) => setGender(e.target.value)}
+          onChange={(e: any) => setGender(e.target.value as string)}
+          placeholder="Sexo"
         />
         <input
           value={height}
           onChange={(e: any) => setHeight(e.target.value)}
+          placeholder="Altura em centimentros"
         />
         <input
           value={weight}
           onChange={(e: any) => setWeight(e.target.value)}
+          placeholder="Peso em quilos"
         />
-        <input value={waist} onChange={(e: any) => setWaist(e.target.value)} />
+        <input
+          value={waist}
+          onChange={(e: any) => setWaist(e.target.value)}
+          placeholder="Cintura em centimetros"
+        />
         <input
           value={whatsapp}
           onChange={(e: any) => setWhatsapp(e.target.value)}
+          placeholder="Whatsapp"
         />
-        <input value={email} onChange={(e: any) => setEmail(e.target.value)} />
-        <input value={imc} onChange={(e: any) => setImc(e.target.value)} />
+        <input
+          value={email}
+          onChange={(e: any) => setEmail(e.target.value)}
+          placeholder="E-mail"
+        />
+        <input
+          value={imc}
+          onChange={(e: any) => setImc(e.target.value)}
+          placeholder="IMC"
+        />
         <input
           value={bodyFat}
           onChange={(e: any) => setBodyFat(e.target.value)}
+          placeholder="Percentual de gordura"
         />
         <input
           value={muscle}
           onChange={(e: any) => setMuscle(e.target.value)}
+          placeholder="Percentual de massa magra"
         />
         <button onClick={createPdf}>Gerar pdf</button>
       </Main>
