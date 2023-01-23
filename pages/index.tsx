@@ -2,7 +2,7 @@ import Head from "next/head";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import type { TDocumentDefinitions, Content } from "pdfmake/interfaces";
-import { Main } from "../styles/";
+import { Main, FormControlStyled } from "../styles/";
 import { useEffect, useState } from "react";
 import * as bodyFatImport from "../data/body-fat.json";
 import * as muscleImport from "../data/muscle.json";
@@ -14,9 +14,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -223,27 +221,6 @@ export default function Home() {
           onChange={(e: any) => setEmail(e.target.value)}
         />
 
-        <FormControl>
-          <FormLabel id="demo-row-radio-buttons-group-label">Sexo</FormLabel>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
-          >
-            <FormControlLabel
-              value="female"
-              control={<Radio />}
-              label="Mulher"
-              onChange={(e: any) => setGender(e.target.value)}
-            />
-            <FormControlLabel
-              value="male"
-              control={<Radio />}
-              label="Homem"
-              onChange={(e: any) => setGender(e.target.value)}
-            />
-          </RadioGroup>
-        </FormControl>
         <TextField
           id="outlined-basic"
           label="Idade"
@@ -285,7 +262,6 @@ export default function Home() {
           }}
           type={"number"}
         />
-
         <TextField
           id="outlined-basic"
           label="IMC"
@@ -310,6 +286,27 @@ export default function Home() {
           onChange={(e: any) => setMuscle(Number(e.target.value))}
           type={"number"}
         />
+        <FormControlStyled>
+          <FormLabel id="demo-row-radio-buttons-group-label">Sexo</FormLabel>
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name="row-radio-buttons-group"
+          >
+            <FormControlLabel
+              value="female"
+              control={<Radio />}
+              label="Mulher"
+              onChange={(e: any) => setGender(e.target.value)}
+            />
+            <FormControlLabel
+              value="male"
+              control={<Radio />}
+              label="Homem"
+              onChange={(e: any) => setGender(e.target.value)}
+            />
+          </RadioGroup>
+        </FormControlStyled>
         <Button
           variant="contained"
           endIcon={<PictureAsPdfIcon />}

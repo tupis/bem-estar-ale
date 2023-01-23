@@ -1,4 +1,7 @@
 import styled from "styled-components";
+import FormControl from "@mui/material/FormControl";
+
+// FormControl
 
 export const Main = styled.main`
   display: flex;
@@ -6,8 +9,16 @@ export const Main = styled.main`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  width: 100vw;
+  margin: auto;
+  max-width: 400px;
   > div {
     margin: 5px 0;
+    width: 100%;
   }
+`;
+export const FormControlStyled = styled(FormControl)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
 `;
