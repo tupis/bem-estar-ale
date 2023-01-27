@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import * as bodyFatImport from "../data/body-fat.json";
 import * as muscleImport from "../data/muscle.json";
 import * as imcImport from "../data/imc.json";
+import * as visceralImport from "../data/visceral.json";
 import { TextField } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import Button from "@mui/material/Button";
@@ -26,6 +27,8 @@ const bodyFatJson = bodyFatImport as { [key: string]: any };
 const muscleJson = muscleImport as { [key: string]: any };
 
 const imcJson = imcImport as { [key: string]: any };
+
+const visceralJson = visceralImport as { [key: string]: any };
 
 export default function Home() {
   const [name, setName] = useState<string>("");
@@ -49,6 +52,10 @@ export default function Home() {
   const [muscle, setMuscle] = useState<number | "">("");
   const [muscleClass, setMuscleClass] = useState<string>("");
   const [filterNormalMuscle, setFilterNormalMuscle] = useState<any[]>([]);
+
+  const [visceral, setVisceral] = useState<number | "">("");
+  const [visceralClass, setVisceralClass] = useState<string>("");
+  const [filterNormalVisceral, setFilterNormalVisceral] = useState<any[]>([]);
 
   const createPdf = () => {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -103,7 +110,7 @@ export default function Home() {
       },
       {
         text: `Seu percentual de gordura é ${bodyFat}, considerado ${bodyFatClass}`,
-        marginTop: 20,
+        marginTop: 10,
         marginLeft: 130,
       },
       {
@@ -133,6 +140,22 @@ export default function Home() {
       },
       {
         image: ImagesBase64.tableMuscle,
+        fit: [350, 350],
+        marginLeft: 130,
+      },
+      {
+        text: `Seu percentual de gordural visceral é ${muscle}, considerado ${muscleClass}`,
+        marginLeft: 130,
+        marginTop: 10,
+      },
+      {
+        text: `O normal é entre ${filterNormalVisceral[0][0]} e ${
+          filterNormalVisceral[filterNormalVisceral.length - 1][0]
+        }`,
+        marginLeft: 130,
+      },
+      {
+        image: ImagesBase64.visceral,
         fit: [350, 350],
         marginLeft: 130,
       },
@@ -179,6 +202,14 @@ export default function Home() {
     );
     setFilterNormalImc(normalFilterImc);
   }, [imc]);
+
+  useEffect(() => {
+    setImcClass(visceralJson[Number(visceral)]);
+    const normalFilterVisceral = Object.entries(visceralJson).filter(
+      (item) => item[1] === "nível normal"
+    );
+    setFilterNormalVisceral(normalFilterVisceral);
+  }, [visceral]);
 
   return (
     <>
@@ -284,6 +315,14 @@ export default function Home() {
           variant="outlined"
           value={muscle}
           onChange={(e: any) => setMuscle(Number(e.target.value))}
+          type={"number"}
+        />
+        <TextField
+          id="outlined-basic"
+          label="Gordura Visceral"
+          variant="outlined"
+          value={visceral}
+          onChange={(e: any) => setVisceral(Number(e.target.value))}
           type={"number"}
         />
         <FormControlStyled>
