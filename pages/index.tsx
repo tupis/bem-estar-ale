@@ -57,6 +57,8 @@ export default function Home() {
   const [visceralClass, setVisceralClass] = useState<string>("");
   const [filterNormalVisceral, setFilterNormalVisceral] = useState<any[]>([]);
 
+  const [toggleButton, setToggleButton] = useState<boolean>(true);
+
   const createPdf = () => {
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -211,6 +213,38 @@ export default function Home() {
     setFilterNormalVisceral(normalFilterVisceral);
   }, [visceral]);
 
+  useEffect(() => {
+    const allFields = [
+      name,
+      age,
+      weight,
+      height,
+      whatsapp,
+      email,
+      gender,
+      waist,
+      imc,
+      muscle,
+      visceral,
+    ].some((field) => field === "");
+
+    allFields ? setToggleButton(true) : setToggleButton(false);
+
+    console.log(allFields);
+  }, [
+    name,
+    age,
+    weight,
+    height,
+    whatsapp,
+    email,
+    gender,
+    waist,
+    imc,
+    muscle,
+    visceral,
+  ]);
+
   return (
     <>
       <Head>
@@ -251,7 +285,6 @@ export default function Home() {
           value={email}
           onChange={(e: any) => setEmail(e.target.value)}
         />
-
         <TextField
           id="outlined-basic"
           label="Idade"
@@ -350,6 +383,7 @@ export default function Home() {
           variant="contained"
           endIcon={<PictureAsPdfIcon />}
           onClick={createPdf}
+          disabled={toggleButton}
         >
           Gerar pdf
         </Button>
