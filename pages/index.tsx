@@ -146,7 +146,7 @@ export default function Home() {
         marginLeft: 130,
       },
       {
-        text: `Seu percentual de gordural visceral é ${muscle}, considerado ${muscleClass}`,
+        text: `Seu percentual de gordural visceral é ${visceral}, considerado ${visceralClass}`,
         marginLeft: 130,
         marginTop: 10,
       },
@@ -206,7 +206,7 @@ export default function Home() {
   }, [imc]);
 
   useEffect(() => {
-    setImcClass(visceralJson[Number(visceral)]);
+    setVisceralClass(visceralJson[Number(visceral)]);
     const normalFilterVisceral = Object.entries(visceralJson).filter(
       (item) => item[1] === "nível normal"
     );
