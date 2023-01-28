@@ -8,7 +8,6 @@ export const Main = styled.main`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
   margin: auto;
   max-width: 400px;
   > div {
@@ -20,5 +19,5 @@ export const FormControlStyled = styled(FormControl)`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 0;
+  margin: 10px;
 `;
