@@ -40,6 +40,9 @@ export default function Home() {
   const [email, setEmail] = useState<string>("");
   const [gender, setGender] = useState<string>("");
   const [waist, setWaist] = useState<string>("");
+  const [topABS, setTopABS] = useState<number | "">("");
+  const [midABS, setMidABS] = useState<number | "">("");
+  const [bottomABS, setBottomABS] = useState<number | "">("");
 
   const [imc, setImc] = useState<number | "">("");
   const [imcClass, setImcClass] = useState<string>("");
@@ -84,6 +87,18 @@ export default function Home() {
               `Altura: ${height} cm`,
               `Gênero: ${gender === "male" ? "Homem" : "Mulher"}`,
               `Cintura: ${waist} cm`,
+            ],
+          ],
+        },
+      },
+      {
+        table: {
+          widths: ["*", "*", "*"],
+          body: [
+            [
+              `Abdomen Superior: ${topABS} cm`,
+              `Abdômen Mediano: ${midABS} cm`,
+              `Abdômen Inferior: ${bottomABS} cm`,
             ],
           ],
         },
@@ -271,6 +286,39 @@ export default function Home() {
             renderInput={(params) => <TextField {...params} />}
           />
         </LocalizationProvider>
+        <TextField
+          id="outlined-basic"
+          label="Abdomen Superior"
+          variant="outlined"
+          value={topABS}
+          onChange={(e: any) => setTopABS(e.target.value as number)}
+          InputProps={{
+            endAdornment: <InputAdornment position="start">cm</InputAdornment>,
+          }}
+          type="number"
+        />
+        <TextField
+          id="outlined-basic"
+          label="Abdômen Mediano"
+          variant="outlined"
+          value={midABS}
+          onChange={(e: any) => setMidABS(e.target.value as number)}
+          InputProps={{
+            endAdornment: <InputAdornment position="start">cm</InputAdornment>,
+          }}
+          type="number"
+        />
+        <TextField
+          id="outlined-basic"
+          label="Abdômen Inferior"
+          variant="outlined"
+          value={bottomABS}
+          onChange={(e: any) => setBottomABS(e.target.value as number)}
+          InputProps={{
+            endAdornment: <InputAdornment position="start">cm</InputAdornment>,
+          }}
+          type="number"
+        />
         <TextField
           id="outlined-basic"
           label="Whatsapp"
